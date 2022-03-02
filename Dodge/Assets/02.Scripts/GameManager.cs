@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 // UI 관련 라이브러리 사용할래~
@@ -38,6 +38,15 @@ public class GameManager : MonoBehaviour
             // 컴포넌트를 이용해 표시
             timeText.text = "Time : "+(int)surviveTime;
         }
+        else
+        {
+            // 게임오버인 상태에서 'R'키를 누른다면,
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                // SampleScene 씬을 로드
+                SceneManager.LoadScene(0);
+            }
+        }
     }
 
     // 현재 게임을 게임오버 상태로 변경하는 메서드
@@ -45,5 +54,26 @@ public class GameManager : MonoBehaviour
     {
         // 현재 상태를 게임오버 상태로 전환
         isGameover = true;
+        // 게임오버 텍스트 게임 오브젝트를 활성화
+        gameOverText.SetActive(true);
+
+        // 'BestTime' 키로 저장된 이전까지의 최고
+        // 기록을 가져오기
+        float bestTime = 
+            PlayerPrefs.GetFloat("BestTime");
+
+        // 이전까지의 최고 기록과 현재 생존 시간비교
+        if(bestTime < surviveTime)
+        {
+            // 최고 기록 값을 현재
+            // 생존 시간 값으로 변경
+            bestTime = surviveTime;
+            // 변경된 최고 기록을 'BestTime' 키로 저장
+            PlayerPrefs.SetFloat("BestTime", bestTime);
+        }
+
+        // 최고 기록을 recordText 컴포넌트에 표시
+        recordText.text = 
+            "Best Time : " + (int)bestTime;
     }
 }
